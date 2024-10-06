@@ -176,7 +176,7 @@
 
         const fragmentShader = `
             #define MAX_ITER 5
-            #define TAU 6.28318530718
+            #define TAU 1.48318530718
             uniform float iTime;
             uniform vec2 iResolution;
             varying vec2 vUv;
@@ -200,7 +200,7 @@
                 c /= float(MAX_ITER);
                 c = 1.19-pow(c, 1.4);
                 vec3 colour = vec3(pow(abs(c), 4.0));
-                colour = clamp(colour + vec3(0.01, 0.0, 0.0), 0.0, 1.0);
+                colour = clamp(colour + vec3(0.01, 0.02, 0.01), 0.0, 1.0);
                 
                 gl_FragColor = vec4(colour, 1.0);
             }
