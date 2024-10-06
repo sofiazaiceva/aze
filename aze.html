@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>sofi</title>
+    <style>
+
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            overflow: hidden;
+            text-shadow: 2px 2px 2px rgba(209, 209, 209, 0.3);
+            
+        }
+        #shader-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        .container {
+            position: relative;
+            z-index: 1;
+            height: 100vh;
+            height: calc(var(--vh, 1vh) * 100);
+            overflow-y: scroll;
+            scroll-behavior: smooth;
+            scroll-snap-type: y mandatory;
+            text-align: center;
+        }
+        .section {
+            height: 100vh;
+            height: calc(var(--vh, 1vh) * 100);
+            position: relative;
+            scroll-snap-align: start;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+        }
+        .section.active {
+            opacity: 1;
+        }
+
+
+        .header {
+            position: absolute;
+            top: 5%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 44px;
+            font-stretch: narrower;
+            line-height: 1.2; /* Adjusted for better readability */
+            font-weight: normal;
+            text-transform: lowercase;
+            letter-spacing: 0.4em;
+            text-align: center;
+            width: 90%; /* Ensures the text doesn't touch the edges on smaller screens */
+            max-width: 800px; /* Prevents the text from becoming too wide on large screens */
+        }
+
+        .header1 {
+            position: absolute;
+            top: 90%;
+            left: 15%;
+            transform: translate(-50%, -50%);
+            font-size: 44px;
+            font-stretch: narrower;
+            line-height: 1.2; /* Adjusted for better readability */
+            font-weight: normal;
+            text-transform: lowercase;
+            letter-spacing: 0.4em;
+            text-align: center;
+            width: 90%; /* Ensures the text doesn't touch the edges on smaller screens */
+            max-width: 800px; /* Prevents the text from becoming too wide on large screens */
+        }
+
+        .header2 {
+            position: absolute;
+            top: 90%;
+            left: 90%;
+            transform: translate(-50%, -50%);
+            font-size: 44px;
+            font-stretch: narrower;
+            line-height: 1.2; /* Adjusted for better readability */
+            font-weight: normal;
+            text-transform: lowercase;
+            letter-spacing: 0.4em;
+            text-align: center;
+            width: 90%; /* Ensures the text doesn't touch the edges on smaller screens */
+            max-width: 800px; /* Prevents the text from becoming too wide on large screens */
+        }
+
+
+        .social-links {
+            position: absolute;
+            top: 50%;
+            left: 20px;
+        }
+        .social-links a {
+            margin-right: 10px;
+            text-decoration: none;
+            color: #000;
+            letter-spacing: 0.3em;
+            text-transform: lowercase;
+        }
+    
+        
+        .email-link {
+            color: #000;
+            text-decoration: none;
+            transition: text-shadow 0.3s ease;
+        }
+        .email-link:hover {
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .centered-image {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 70%;
+            max-height: 70%;
+            object-fit: contain;
+        }
+
+        /* Media Queries */
+        @media only screen and (max-width: 600px) {
+            body {
+                font-size: 12px;
+            }
+            .header {
+                font-size: 26px;
+                top: 40px;
+                right: 10px;
+            }
+            .social-links {
+                top: 10px;
+                left: 10px;
+            }
+        }
+        @media only screen and (min-width: 601px) and (max-width: 768px) {
+            body {
+                font-size: 15px;
+            }
+            .header {
+                font-size: 22px;
+                top: 60px;
+            }
+            
+        }
+        @media only screen and (min-width: 769px) and (max-width: 992px) {
+            .mixcloud-player {
+                margin-top: 260px;
+            }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <canvas id="shader-background"></canvas>
+    <div class="container"> 
+        <div class="section active" id="home">
+            <h1 class="header">sofi - "aze"</h2>
+            <h2 class="header1">download</h1>
+            <h3 class="header2">play</h3>
+
+
+           <!--  <div class="social-links">
+                <a href="https://riforma.bandcamp.com" target="_blank">RIFORMA</a>  
+                <a href="https://www.sofiazaiceva.xyz" target="_blank">SOFI</a>
+            </div> 
+            -->
+           
+            <img src="media2/artwork.jpg" alt="Centered Image" class="centered-image">
+        </div>
+    </div>
+
+    <script>
+        const vertexShader = `
+            varying vec2 vUv;
+            void main() {
+                vUv = uv;
+                gl_Position = vec4(position, 1.0);
+            }
+        `;
+
+        const fragmentShader = `
+            #define MAX_ITER 5
+            #define TAU 6.28318530718
+            uniform float iTime;
+            uniform vec2 iResolution;
+            varying vec2 vUv;
+
+            void main() {
+                vec2 fragCoord = vUv * iResolution;
+                float time = iTime * .2 + 2.0;
+                vec2 uv = fragCoord / iResolution.xy;
+                
+                vec2 p = mod(uv*TAU, TAU)-250.0;
+                vec2 i = vec2(p);
+                float c = 2.0;
+                float inten = .005;
+
+                for (int n = 0; n < MAX_ITER; n++)
+                {
+                    float t = time * (1.0 - (2.5 / float(n+1)));
+                    i = p + vec2(cos(t - i.x) + sin(t + i.y), sin(t - i.y) + cos(t + i.x));
+                    c += 1.0/length(vec2(p.x / (sin(i.x+t)/inten),p.y / (cos(i.y+t)/inten)));
+                }
+                c /= float(MAX_ITER);
+                c = 1.19-pow(c, 1.4);
+                vec3 colour = vec3(pow(abs(c), 4.0));
+                colour = clamp(colour + vec3(0.01, 0.0, 0.0), 0.0, 1.0);
+                
+                gl_FragColor = vec4(colour, 1.0);
+            }
+        `;
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+        const renderer = new THREE.WebGLRenderer({canvas: document.getElementById('shader-background')});
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        const uniforms = {
+            iTime: { value: 0 },
+            iResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) }
+        };
+
+        const material = new THREE.ShaderMaterial({
+            vertexShader,
+            fragmentShader,
+            uniforms
+        });
+
+        const geometry = new THREE.PlaneGeometry(2, 2);
+        const mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
+
+        function animate(time) {
+            uniforms.iTime.value = time / 3000;
+            renderer.render(scene, camera);
+            requestAnimationFrame(animate);
+        }
+
+        requestAnimationFrame(animate);
+
+        window.addEventListener('resize', () => {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            uniforms.iResolution.value.set(window.innerWidth, window.innerHeight);
+        });
+
+        // Additional JavaScript for your website functionality
+        function updateActiveSection() {
+            const sections = document.querySelectorAll('.section');
+            const scrollPosition = window.scrollY;
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+
+                if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                    section.classList.add('active');
+                    document.querySelector('.section-name').textContent = section.id;
+                } else {
+                    section.classList.remove('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', updateActiveSection);
+        window.addEventListener('load', updateActiveSection);
+
+        // First we get the viewport height and we multiply it by 1% to get a value for a vh unit
+        let vh = window.innerHeight * 0.01;
+        // Then we set the value in the --vh custom property to the root of the document
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+
+        // We listen to the resize event
+        window.addEventListener('resize', () => {
+            // We execute the same script as before
+            let vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        });
+    </script>
+</body>
+</html>
