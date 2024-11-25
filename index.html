@@ -5,351 +5,398 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>sofi</title>
     <style>
-        
-       body, html {
-   margin: 0;
-   padding: 0;
-   height: 100%;
-   width: 100%;
-   font-family: Arial, sans-serif;
-   font-size: 14px;
-   overflow: hidden;
-   text-shadow: 1px 1px 1px rgba(209, 209, 209, 0.3);
-}
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            overflow: hidden;
+            text-shadow: 1px 1px 1px rgba(209, 209, 209, 0.3);
+        }
 
-#shader-background {
-   position: fixed;
-   top: 0;
-   left: 0;
-   width: 100%;
-   height: 100%;
-   z-index: -1;
-}
+        #shader-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
 
-.container {
-   position: relative;
-   z-index: 1;
-   height: 100vh;
-   height: calc(var(--vh, 1vh) * 100);
-   overflow-y: scroll;
-   scroll-behavior: smooth;
-   scroll-snap-type: y mandatory;
-   text-align: center;
-}
+        .container {
+            position: relative;
+            z-index: 1;
+            height: 100vh;
+            height: calc(var(--vh, 1vh) * 100);
+            overflow-y: scroll;
+            scroll-behavior: smooth;
+            scroll-snap-type: y mandatory;
+            text-align: center;
+        }
 
-.section {
-   height: 100vh;
-   height: calc(var(--vh, 1vh) * 100);
-   position: relative;
-   scroll-snap-align: start;
-   /* Remove opacity and transition by default */
-}
-/* Only apply opacity animation to the home section */
-#home {
-   opacity: 0;
-   transition: opacity 1.5s ease-in-out;
-}
+        .section {
+            height: 100vh;
+            height: calc(var(--vh, 1vh) * 100);
+            position: relative;
+            scroll-snap-align: start;
+        }
 
-#home.active {
-   opacity: 1;
-}
+        #home {
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+        }
 
-/* Make sure player section is always visible */
-#player {
-   opacity: 1;
-}
+        #home.active {
+            opacity: 1;
+        }
 
-.bandcamp-container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1; /* Add this to ensure it's above other elements */
-}
+        #player {
+            opacity: 1;
+        }
 
-.section.active {
-   opacity: 1;
-}
+        .bandcamp-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+        }
 
-.header{ 
-   position: absolute;
-   left: 50%;
-   /* transform: translate(-50%, 0); */
-   transform: translate(-50%, 0) scaleX(0.8); /* Scale horizontally to 80% */
-   text-align: center;
-   width: 100%;
-   font-size: 3vw;
-   font-stretch: narrower; 
-   line-height: 1.2;
-   font-weight: normal;
-   text-transform: uppercase;
-   letter-spacing: 0.3em;
-}
+        .section.active {
+            opacity: 1;
+        }
+        .header {
+            position: absolute;
+            left: 50%;
+            transform: translate(-50%, 0) scaleX(0.8);
+            text-align: center;
+            width: 100%;
+            font-size: 3vw;
+            font-stretch: narrower;
+            line-height: 1.2;
+            font-weight: normal;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+        }
 
+        .header1, .header2 {
+            position: absolute;
+            left: 50%;
+            transform: translate(-50%, 0) scaleX(0.8);
+            text-align: center;
+            width: 100%;
+            font-size: 3vw;
+            font-stretch: narrower;
+            font-stretch: -50%;
+            line-height: 1.2;
+            font-weight: normal;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+        }
 
-.header1, .header2 {
-   position: absolute;
-   left: 50%;
-   /* transform: translate(-50%, 0); */
-   transform: translate(-50%, 0) scaleX(0.8); /* Scale horizontally to 80% */
-   text-align: center;
-   width: 100%;
-   font-size: 3vw;
-   font-stretch: narrower; 
-   font-stretch: -50%;
-   line-height: 1.2;
-   font-weight: normal;
-   text-transform: uppercase;
-   letter-spacing: 0.3em;
-}
+        .header3 {
+            position: absolute;
+            left: 50%;
+            transform: translate(-50%, 0);
+            text-align: center;
+            width: 100%;
+            font-size: 2vw;
+            font-stretch: narrower;
+            line-height: 1.2;
+            font-weight: normal;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
 
-.header {
-   top: 25%;
-}
+        .header {
+            top: 25%;
+        }
 
-.header1 {
-   top: 45%;
-}
+        .header1 {
+            top: 45%;
+        }
 
-.header2 {
-   top: 55%;
-}
+        .header2 {
+            top: 55%;
+        }
 
-.header1 a, .header2 a {
-    color: inherit;
-    text-decoration: none;
-    font-size: inherit;
-    font-stretch: inherit;
-    line-height: inherit;
-    font-weight: inherit;
-    text-transform: inherit;
-    letter-spacing: inherit;
-    transition: all 0.3s ease;
-    display: inline-block; /* Add this to ensure transform works */
-    -webkit-tap-highlight-color: transparent; /* Removes default mobile tap highlight */
-}
+        .header3 {
+            top: 85%;
+        }
 
-.header1 a:hover, .header2 a:hover,
-.header1 a:active, .header2 a:active { /* :active for touch interaction */
-    opacity: 0.7;
-    
-    transform: scale(1.02); /* Slight shrink gives good feedback on touch */
-}
+        .header1 a, .header2 a {
+            color: inherit;
+            text-decoration: none;
+            font-size: inherit;
+            font-stretch: inherit;
+            line-height: inherit;
+            font-weight: inherit;
+            text-transform: inherit;
+            letter-spacing: inherit;
+            transition: all 0.3s ease;
+            display: inline-block;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-.social-links {
-   position: absolute;
-   top: 50%;
-   left: 20px;
-}
+        .header1 a:hover, .header2 a:hover,
+        .header1 a:active, .header2 a:active {
+            opacity: 0.7;
+            transform: scale(1.02);
+        }
+        @keyframes fadeInOut {
+           0% { opacity: 0; }
+           50% { opacity: 1; }
+           100% { opacity: 0; }
+       }
 
-.social-links a {
-   margin-right: 10px;
-   text-decoration: none;
-   color: #000;
-   letter-spacing: 0.01em;
-   text-transform: lowercase;
-}
+       @keyframes float {
+           0% { transform: translate(-50%, 0); }
+           50% { transform: translate(-50%, -10px); }
+           100% { transform: translate(-50%, 0); }
+       }
 
-.email-link {
-   color: #000;
-   text-decoration: none;
-   transition: text-shadow 0.3s ease;
-}
+       .header3 {
+           animation: fadeInOut 8s infinite, float 7s ease-in-out ;
+       }
 
-.email-link:hover {
-   text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-}
+       @media (hover: none) and (pointer: coarse) {
+           .container {
+               -webkit-overflow-scrolling: touch;
+           }
+       }
 
-.bandcamp-container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
+       /* Media Queries */
+       @media only screen and (max-width: 600px) {
+           body {
+               font-size: 12px;
+           }
+           
+           .header, .header1, .header2 {
+               font-size: 6vw;
+           }
+           
+           .header {
+               top: 30%;
+           }
+           
+           .header1 {
+               top: 40%;
+           }
+           
+           .header2 {
+               top: 50%;
+           }
 
-/* */
+           .header3 {
+               font-size: 4vw;
+               top: 80%;
+           }
+           
+           .social-links {
+               top: 10px;
+               left: 10px;
+           }
+       }
 
-/* 
- .text-overlay {
-    position: fixed;
-    top: 20%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60%; 
-    height: 60%; 
-    background: rgba(255, 255, 255, 0.01);
-    z-index: 0;
-    pointer-events: none;
-    border-radius: 0px;
-}  */
+       @media only screen and (min-width: 601px) and (max-width: 768px) {
+           body {
+               font-size: 15px;
+           }
+           
+           .header, .header1, .header2 {
+               font-size: 4vw;
+           }
+           
+           .header {
+               top: 30%;
+           }
+           
+           .header1 {
+               top: 40%;
+           }
+           
+           .header2 {
+               top: 50%;
+           }
 
+           .header3 {
+               top: 85%;
+           }
+       }
 
-
-/* Media Queries */
-@media only screen and (max-width: 600px) {
-   body {
-       font-size: 12px;
-   }
-   
-   .header, .header1, .header2 {
-       font-size: 6vw;
-   }
-   
-   .header {
-       top: 30%;
-   }
-   
-   .header1 {
-       top: 40%;
-   }
-   
-   .header2 {
-       top: 50%;
-   }
-   
-   .social-links {
-       top: 10px;
-       left: 10px;
-   }
-}
-
-@media only screen and (min-width: 601px) and (max-width: 768px) {
-   body {
-       font-size: 15px;
-   }
-   
-   .header, .header1, .header2 {
-       font-size: 4vw;
-   }
-   
-   .header {
-       top: 30%;
-   }
-   
-   .header1 {
-       top: 40%;
-   }
-   
-   .header2 {
-       top: 50%;
-   }
-}
-
-@media only screen and (min-width: 769px) and (max-width: 992px) {
-   .mixcloud-player {
-       margin-top: 260px;
-   }
-}
-    </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+       @media only screen and (min-width: 769px) and (max-width: 992px) {
+           .mixcloud-player {
+               margin-top: 260px;
+           }
+       }
+   </style>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
-    <canvas id="shader-background"></canvas>
-    <div class="container">
-        <div class="section active" id="home">
-            <h1 class="header">sofi - aze | RIFORMA</h1>
-            <h2 class="header1"><a href="https://riforma.bandcamp.com/yum">redeem your code</a></h2>
-            <h3 class="header2"><a href="https://riforma.bandcamp.com/album/aze">support</a></h3>
-        </div>
-        <div class="section" id="player">
-            <div class="bandcamp-container">
-                <iframe style="border: 0; width: 350px; height: 721px;" 
-                    src="https://bandcamp.com/EmbeddedPlayer/album=2640124460/size=large/bgcol=333333/linkcol=ffffff/package=3305977429/transparent=true/" 
-                    seamless>
-                    <a href="https://riforma.bandcamp.com/album/aze">AZE by sofi</a>
-                </iframe>
-            </div>
-        </div>
-    </div>
+   <canvas id="shader-background"></canvas>
+   <div class="container">
+       <div class="section active" id="home">
+           <h1 class="header">sofi - aze | RIFORMA</h1>
+           <h2 class="header1"><a href="https://riforma.bandcamp.com/yum">redeem your code</a></h2>
+           <h3 class="header2"><a href="https://riforma.bandcamp.com/album/aze">support</a></h3>
+           <h4 class="header3">scroll</h4>
+       </div>
+       <div class="section" id="player">
+           <div class="bandcamp-container">
+               <iframe style="border: 0; width: 350px; height: 721px;"
+                   src="https://bandcamp.com/EmbeddedPlayer/album=2640124460/size=large/bgcol=333333/linkcol=ffffff/package=3305977429/transparent=true/"
+                   seamless>
+                   <a href="https://riforma.bandcamp.com/album/aze">AZE by sofi</a>
+               </iframe>
+           </div>
+       </div>
+   </div>
 
-    <script>
-        const vertexShader = `
-            varying vec2 vUv;
-            void main() {
-                vUv = uv;
-                gl_Position = vec4(position, 1.0);
-            }
-        `;
-    
-        const fragmentShader = `
-            #define MAX_ITER 6
-            #define TAU 1.58318530718
-            uniform float iTime;
-            uniform vec2 iResolution;
-            varying vec2 vUv;
-            void main() {
-                vec2 fragCoord = vUv * iResolution;
-                float time = iTime * .2 + 2.0;
-                vec2 uv = fragCoord / iResolution.xy;
-                vec2 p = mod(uv*TAU, TAU)-250.0;
-                vec2 i = vec2(p);
-                float c = 2.0;
-                float inten = .005;
-                for (int n = 0; n < MAX_ITER; n++)
-                {
-                    float t = time * (1.0 - (2.6 / float(n+1)));
-                    i = p + vec2(cos(t - i.x) + sin(t + i.y), sin(t - i.y) + cos(t + i.x));
-                    c += 1.0/length(vec2(p.x / (sin(i.x+t)/inten),p.y / (cos(i.y+t)/inten)));
-                }
-                c /= float(MAX_ITER);
-                c = 1.19-pow(c, 1.4);
-                vec3 colour = vec3(pow(abs(c), 4.0));
-                colour = clamp(colour + vec3(0.01, 0.01, 0.01), 0.0, 1.0);
-                gl_FragColor = vec4(colour, 2.0);
-            }
-        `;
-    
-        const scene = new THREE.Scene();
-        const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-        const renderer = new THREE.WebGLRenderer({canvas: document.getElementById('shader-background')});
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        const uniforms = {
-            iTime: { value: 0 },
-            iResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) }
-        };
-        const material = new THREE.ShaderMaterial({
-            vertexShader,
-            fragmentShader,
-            uniforms
-        });
-        const geometry = new THREE.PlaneGeometry(2, 2);
-        const mesh = new THREE.Mesh(geometry, material);
-        scene.add(mesh);
-    
-        function animate(time) {
-            uniforms.iTime.value = time / 3000;
-            renderer.render(scene, camera);
-            requestAnimationFrame(animate);
+   <script>
+    const vertexShader = `
+        varying vec2 vUv;
+        void main() {
+            vUv = uv;
+            gl_Position = vec4(position, 1.0);
         }
+    `;
+
+    const fragmentShader = `
+        #define MAX_ITER 6
+        #define TAU 1.58318530718
+        uniform float iTime;
+        uniform vec2 iResolution;
+        varying vec2 vUv;
+
+        void main() {
+            vec2 fragCoord = vUv * iResolution;
+            float time = iTime * .2 + 2.0;
+            vec2 uv = fragCoord / iResolution.xy;
+            
+            vec2 p = mod(uv*TAU, TAU)-250.0;
+            vec2 i = vec2(p);
+            float c = 2.0;
+            float inten = .005;
+
+            for (int n = 0; n < MAX_ITER; n++)
+            {
+                float t = time * (1.0 - (2.6 / float(n+1)));
+                i = p + vec2(cos(t - i.x) + sin(t + i.y), sin(t - i.y) + cos(t + i.x));
+                c += 1.0/length(vec2(p.x / (sin(i.x+t)/inten),p.y / (cos(i.y+t)/inten)));
+            }
+            c /= float(MAX_ITER);
+            c = 1.19-pow(c, 1.4);
+            vec3 colour = vec3(pow(abs(c), 4.0));
+            colour = clamp(colour + vec3(0.01, 0.01, 0.01), 0.0, 1.0);
+            
+            gl_FragColor = vec4(colour, 2.0);
+        }
+    `;
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+    const renderer = new THREE.WebGLRenderer({canvas: document.getElementById('shader-background')});
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    const uniforms = {
+        iTime: { value: 0 },
+        iResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) }
+    };
+
+    const material = new THREE.ShaderMaterial({
+        vertexShader,
+        fragmentShader,
+        uniforms
+    });
+
+    const geometry = new THREE.PlaneGeometry(2, 2);
+    const mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+
+    function animate(time) {
+        uniforms.iTime.value = time / 3000;
+        renderer.render(scene, camera);
         requestAnimationFrame(animate);
-    
-        // Update Bandcamp embed based on screen size
-        function updateBandcampEmbed() {
-            const container = document.querySelector('.bandcamp-container');
-            if (window.innerWidth <= 600) {
-                container.innerHTML = `<iframe style="border: 0; width: 240px; height: 520px;" src="https://bandcamp.com/EmbeddedPlayer/album=2640124460/size=large/bgcol=333333/linkcol=ffffff/package=3305977429/transparent=true/" 
+    }
+
+    requestAnimationFrame(animate);
+
+    // Update Bandcamp embed based on screen size
+    function updateBandcampEmbed() {
+        const container = document.querySelector('.bandcamp-container');
+        if (window.innerWidth <= 600) {
+            container.innerHTML = `<iframe style="border: 0; width: 220px; height: 520px;" 
+                src="https://bandcamp.com/EmbeddedPlayer/album=2640124460/size=large/bgcol=333333/linkcol=ffffff/package=3305977429/transparent=true/"
                 seamless><a href="https://riforma.bandcamp.com/album/aze">AZE by sofi</a></iframe>`;
-            } else {
-                container.innerHTML = `<iframe style="border: 0; width: 350px; height: 721px;" 
-                    src="https://bandcamp.com/EmbeddedPlayer/album=2640124460/size=large/bgcol=333333/linkcol=ffffff/package=3305977429/transparent=true/" 
-                    seamless><a href="https://riforma.bandcamp.com/album/aze">AZE by sofi</a></iframe>`;
-            }
+        } else {
+            container.innerHTML = `<iframe style="border: 0; width: 350px; height: 721px;"
+                src="https://bandcamp.com/EmbeddedPlayer/album=2640124460/size=large/bgcol=333333/linkcol=ffffff/package=3305977429/transparent=true/"
+                seamless><a href="https://riforma.bandcamp.com/album/aze">AZE by sofi</a></iframe>`;
         }
-    
-        // Event listeners
-        window.addEventListener('resize', () => {
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            uniforms.iResolution.value.set(window.innerWidth, window.innerHeight);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const container = document.querySelector('.container');
+        let touchStartY = 0;
+        let touchEndY = 0;
+
+        // Add initial fade in
+        setTimeout(() => {
+            document.querySelector('.header3').style.opacity = '1';
+        }, 1000);
+
+        // Scroll handling
+        container.addEventListener('scroll', function() {
+            const scrollPosition = container.scrollTop;
+            const header3 = document.querySelector('.header3');
             
-            let vh = window.innerHeight * 0.01;
-            document.documentElement.style.setProperty('--vh', `${vh}px`);
-            
-            updateBandcampEmbed();
+            if (scrollPosition > 50) {
+                header3.style.opacity = '0';
+                header3.style.transition = 'opacity 0.5s ease-out';
+            }
         });
-    
-        // Initial setup
+
+        // Touch handling
+        container.addEventListener('touchstart', function(e) {
+            touchStartY = e.touches[0].clientY;
+        });
+
+        container.addEventListener('touchend', function(e) {
+            touchEndY = e.changedTouches[0].clientY;
+            const diff = touchStartY - touchEndY;
+            if (Math.abs(diff) > 50) {
+                const direction = diff > 0 ? 1 : -1;
+                const sections = document.querySelectorAll('.section');
+                const currentSection = Math.round(container.scrollTop / window.innerHeight);
+                const nextSection = currentSection + direction;
+                
+                if (nextSection >= 0 && nextSection < sections.length) {
+                    container.scrollTo({
+                        top: nextSection * window.innerHeight,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+        });
+    });
+
+    // Event listeners
+    window.addEventListener('resize', () => {
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        uniforms.iResolution.value.set(window.innerWidth, window.innerHeight);
         let vh = window.innerHeight * 0.01;
         document.documentElement.style.setProperty('--vh', `${vh}px`);
-        window.addEventListener('load', updateBandcampEmbed);
-    </script>
+        updateBandcampEmbed();
+    });
+
+    // Initial setup
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+    window.addEventListener('load', updateBandcampEmbed);
+</script>
 </body>
+</html>
