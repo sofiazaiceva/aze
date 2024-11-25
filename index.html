@@ -42,8 +42,29 @@
    height: calc(var(--vh, 1vh) * 100);
    position: relative;
    scroll-snap-align: start;
+   /* Remove opacity and transition by default */
+}
+/* Only apply opacity animation to the home section */
+#home {
    opacity: 0;
    transition: opacity 1.5s ease-in-out;
+}
+
+#home.active {
+   opacity: 1;
+}
+
+/* Make sure player section is always visible */
+#player {
+   opacity: 1;
+}
+
+.bandcamp-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1; /* Add this to ensure it's above other elements */
 }
 
 .section.active {
@@ -139,7 +160,12 @@
    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
 
-
+.bandcamp-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
 
 /* */
 
@@ -218,16 +244,21 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
-    
-
     <canvas id="shader-background"></canvas>
-    <!-- <div class="text-overlay"></div> -->
-    <div class="container"> 
+    <div class="container">
         <div class="section active" id="home">
             <h1 class="header">sofi - aze | RIFORMA</h1>
             <h2 class="header1"><a href="https://riforma.bandcamp.com/yum">redeem your code</a></h2>
             <h3 class="header2"><a href="https://riforma.bandcamp.com/album/aze">support</a></h3>
-            <!-- <img src="media2/artwork.jpg" alt="Centered Image" class="centered-image"> -->
+        </div>
+        <div class="section" id="player">
+            <div class="bandcamp-container">
+                <iframe style="border: 0; width: 350px; height: 721px;" 
+                    src="https://bandcamp.com/EmbeddedPlayer/album=2640124460/size=large/bgcol=333333/linkcol=ffffff/package=3305977429/transparent=true/" 
+                    seamless>
+                    <a href="https://riforma.bandcamp.com/album/aze">AZE by sofi</a>
+                </iframe>
+            </div>
         </div>
     </div>
 
@@ -239,24 +270,21 @@
                 gl_Position = vec4(position, 1.0);
             }
         `;
-
+    
         const fragmentShader = `
             #define MAX_ITER 6
             #define TAU 1.58318530718
             uniform float iTime;
             uniform vec2 iResolution;
             varying vec2 vUv;
-
             void main() {
                 vec2 fragCoord = vUv * iResolution;
                 float time = iTime * .2 + 2.0;
                 vec2 uv = fragCoord / iResolution.xy;
-                
                 vec2 p = mod(uv*TAU, TAU)-250.0;
                 vec2 i = vec2(p);
                 float c = 2.0;
                 float inten = .005;
-
                 for (int n = 0; n < MAX_ITER; n++)
                 {
                     float t = time * (1.0 - (2.6 / float(n+1)));
@@ -267,76 +295,61 @@
                 c = 1.19-pow(c, 1.4);
                 vec3 colour = vec3(pow(abs(c), 4.0));
                 colour = clamp(colour + vec3(0.01, 0.01, 0.01), 0.0, 1.0);
-                
                 gl_FragColor = vec4(colour, 2.0);
             }
         `;
-
+    
         const scene = new THREE.Scene();
         const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
         const renderer = new THREE.WebGLRenderer({canvas: document.getElementById('shader-background')});
         renderer.setSize(window.innerWidth, window.innerHeight);
-
         const uniforms = {
             iTime: { value: 0 },
             iResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) }
         };
-
         const material = new THREE.ShaderMaterial({
             vertexShader,
             fragmentShader,
             uniforms
         });
-
         const geometry = new THREE.PlaneGeometry(2, 2);
         const mesh = new THREE.Mesh(geometry, material);
         scene.add(mesh);
-
+    
         function animate(time) {
             uniforms.iTime.value = time / 3000;
             renderer.render(scene, camera);
             requestAnimationFrame(animate);
         }
-
         requestAnimationFrame(animate);
-
+    
+        // Update Bandcamp embed based on screen size
+        function updateBandcampEmbed() {
+            const container = document.querySelector('.bandcamp-container');
+            if (window.innerWidth <= 600) {
+                container.innerHTML = `<iframe style="border: 0; width: 210px; height: 576px;" src="https://bandcamp.com/EmbeddedPlayer/album=2640124460/size=large/bgcol=333333/linkcol=ffffff/package=3305977429/transparent=true/" 
+                seamless><a href="https://riforma.bandcamp.com/album/aze">AZE by sofi</a></iframe>`;
+            } else {
+                container.innerHTML = `<iframe style="border: 0; width: 350px; height: 721px;" 
+                    src="https://bandcamp.com/EmbeddedPlayer/album=2640124460/size=large/bgcol=333333/linkcol=ffffff/package=3305977429/transparent=true/" 
+                    seamless><a href="https://riforma.bandcamp.com/album/aze">AZE by sofi</a></iframe>`;
+            }
+        }
+    
+        // Event listeners
         window.addEventListener('resize', () => {
             renderer.setSize(window.innerWidth, window.innerHeight);
             uniforms.iResolution.value.set(window.innerWidth, window.innerHeight);
-        });
-
-        // Additional JavaScript for your website functionality
-        function updateActiveSection() {
-            const sections = document.querySelectorAll('.section');
-            const scrollPosition = window.scrollY;
-
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                const sectionHeight = section.clientHeight;
-
-                if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
-                    section.classList.add('active');
-                    document.querySelector('.section-name').textContent = section.id;
-                } else {
-                    section.classList.remove('active');
-                }
-            });
-        }
-
-        window.addEventListener('scroll', updateActiveSection);
-        window.addEventListener('load', updateActiveSection);
-
-        // First we get the viewport height and we multiply it by 1% to get a value for a vh unit
-        let vh = window.innerHeight * 0.01;
-        // Then we set the value in the --vh custom property to the root of the document
-        document.documentElement.style.setProperty('--vh', `${vh}px`);
-
-        // We listen to the resize event
-        window.addEventListener('resize', () => {
-            // We execute the same script as before
+            
             let vh = window.innerHeight * 0.01;
             document.documentElement.style.setProperty('--vh', `${vh}px`);
+            
+            updateBandcampEmbed();
         });
+    
+        // Initial setup
+        let vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+        window.addEventListener('load', updateBandcampEmbed);
     </script>
 </body>
-</html>
